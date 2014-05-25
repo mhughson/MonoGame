@@ -89,13 +89,14 @@ namespace Microsoft.Xna.Framework.Media
             if (State != MediaState.Stopped)
             {
 				_session.Stop();
-				_session.Close();
+                _session.ClearTopologies();
+                _session.Close();
                 _volumeController.Dispose();
                 _clock.Dispose();
 			}
 
             // Set the new song.
-            _session.SetTopology(0, song.Topology);
+            _session.SetTopology(SessionSetTopologyFlags.Immediate, song.Topology);
 
             // Get the volume interface.
             IntPtr volumeObj;
@@ -132,7 +133,8 @@ namespace Microsoft.Xna.Framework.Media
 
         private static void PlatformResume()
         {
-            _session.Start(null, null);
+            var varStart = new Variant();
+            _session.Start(null, varStart);
         }
 
         private static void PlatformStop()
